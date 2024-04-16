@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -8,6 +9,8 @@ import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/employee")
 @Slf4j
+@Tag(name = "员工相关接口")
 public class EmployeeController {
 
     @Autowired
@@ -37,6 +41,8 @@ public class EmployeeController {
      * @param employeeLoginDTO
      * @return
      */
+    @ApiOperationSupport(author = "Wotemo")
+    @Operation(summary = "员工登录", description = "以员工身份登录")
     @PostMapping("/login")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("员工登录：{}", employeeLoginDTO);
@@ -66,6 +72,8 @@ public class EmployeeController {
      *
      * @return
      */
+    @ApiOperationSupport(author = "Wotemo")
+    @Operation(summary = "员工登出", description = "以员工身份登出")
     @PostMapping("/logout")
     public Result<String> logout() {
         return Result.success();
