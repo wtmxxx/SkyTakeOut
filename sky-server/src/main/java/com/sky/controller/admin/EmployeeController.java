@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.sky.constant.JwtClaimsConstant;
@@ -49,7 +50,6 @@ public class EmployeeController {
      * @param employeeLoginDTO
      * @return
      */
-    @ApiOperationSupport(author = "Wotemo")
     @Operation(summary = "员工登录", description = "以员工身份登录")
     @Parameters({@Parameter(name = "employeeLoginDTO", description = "员工登录DTO", required = true, in = ParameterIn.DEFAULT)})
     @PostMapping("/login")
@@ -81,7 +81,6 @@ public class EmployeeController {
      *
      * @return Result
      */
-    @ApiOperationSupport(author = "Wotemo")
     @Operation(summary = "员工登出", description = "以员工身份登出")
     @PostMapping("/logout")
     public Result<String> logout() {
@@ -95,7 +94,6 @@ public class EmployeeController {
      * @return Result
      */
     @PostMapping
-    @ApiOperationSupport(author = "Wotemo")
     @Operation(summary = "新增员工", description = "用某个员工账号新增员工")
     @ApiResponse(responseCode = "1", description = "保存成功")
     public Result save(@RequestBody EmployeeDTO employeeDTO){
@@ -111,7 +109,6 @@ public class EmployeeController {
      */
     @GetMapping("/page")
     @Operation(summary = "员工分页查询", description = "员工分页查询")
-    @ApiOperationSupport(author = "Wotemo")
     @ApiResponse(responseCode = "1", description = "查询成功")
     @Parameters({
             @Parameter(name = "name", description = "员工姓名", example = "沃", required = true, in = ParameterIn.DEFAULT),
@@ -125,4 +122,33 @@ public class EmployeeController {
         return Result.success(pageResult);
     }
 
+    @PostMapping("/status/{status}")
+    @Operation(summary = "启用（禁用）员工账号", description = "设置员工账号的可用性")
+    @Parameters({
+            @Parameter(name = "status", description = "状态码", example = "0", required = true, in = ParameterIn.PATH),
+            @Parameter(name = "id", description = "员工ID", example = "1", required = true, in = ParameterIn.DEFAULT),
+    })
+    public Result startOrStop(@PathVariable("status") Integer status, Long id) {
+        log.info("启用（禁用）员工账号, id: {}, status: {}", id, status);
+        LambdaUpdateWrapper<Employee> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(Employee::getId, id).set(Employee::getStatus, status);
+        employeeService.update(lambdaUpdateWrapper);
+        return Result.success();
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "id查询员工", description = "通过ID查询员工信息")
+    @Parameters({
+            @Parameter(name = "id", description = "员工ID", example = "1", required = true, in = ParameterIn.PATH),
+    })
+    public Result<Employee> getById(@PathVariable("id") Long id) {
+        return Result.success(employeeService.getById(id));
+    }
+
+    @PutMapping
+    public Result update(@RequestBody EmployeeDTO employeeDTO){
+        log.info("编辑员工信息");
+        employeeService.update(employeeDTO);
+        return Result.success();
+    }
 }
