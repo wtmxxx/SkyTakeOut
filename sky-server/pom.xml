@@ -17,6 +17,12 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!--LeanCloud-->
+        <dependency>
+            <groupId>com.taptap</groupId>
+            <artifactId>lc-storage-core</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.sky</groupId>
             <artifactId>sky-pojo</artifactId>

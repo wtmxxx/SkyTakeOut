@@ -106,3 +106,8 @@ sky:
     admin-ttl: 72000000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+
+  leancloud:
+    app-id: ${sky.leancloud.app-id}
+    app-key: ${sky.leancloud.app-key}
+    server-url: ${sky.leancloud.server-url}

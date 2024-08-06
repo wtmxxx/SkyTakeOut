@@ -12,3 +12,9 @@ sky:
     port: 6379
     password: 1005
     database: 1
+
+  leancloud:
+    app-id: XvzTrvFOLxE5Zpq34jcDvh7A-MdYXbMMI
+    app-key: Xub8WClpXuytWh5eBAVWrqx1
+    server-url: https://bpserver.wotemo.com
+

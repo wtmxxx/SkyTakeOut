@@ -145,6 +145,8 @@ public class EmployeeController {
     }
 
     @PutMapping
+    @Operation(summary = "编辑员工信息", description = "编辑员工信息")
+    @Parameter(name = "employeeDTO", description = "员工DTO", required = true, in = ParameterIn.DEFAULT)
     public Result update(@RequestBody EmployeeDTO employeeDTO){
         log.info("编辑员工信息");
         employeeService.update(employeeDTO);
