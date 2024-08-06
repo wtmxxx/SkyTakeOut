@@ -19,6 +19,9 @@ spring:
       database: ${sky.redis.database}
 
 mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
   #mapper配置文件
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.sky.entity
