@@ -130,9 +130,8 @@ public class EmployeeController {
     })
     public Result startOrStop(@PathVariable("status") Integer status, Long id) {
         log.info("启用（禁用）员工账号, id: {}, status: {}", id, status);
-        LambdaUpdateWrapper<Employee> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-        lambdaUpdateWrapper.eq(Employee::getId, id).set(Employee::getStatus, status);
-        employeeService.update(lambdaUpdateWrapper);
+
+        employeeService.startOrStop(status, id);
         return Result.success();
     }
 
