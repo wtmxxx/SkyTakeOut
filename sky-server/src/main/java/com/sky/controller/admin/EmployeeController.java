@@ -117,7 +117,7 @@ public class EmployeeController {
     })
     public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {
         log.info("员工分页查询, 参数为: {}", employeePageQueryDTO);
-        employeePageQueryDTO.setPage(employeePageQueryDTO.getPage()-1);
+//        employeePageQueryDTO.setPage(employeePageQueryDTO.getPage()-1);
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }

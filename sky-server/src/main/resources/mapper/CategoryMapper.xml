@@ -14,6 +14,7 @@
             </if>
         </where>
         order by sort asc , create_time desc
+        limit #{page}, #{pageSize}
     </select>
 
     <update id="update" parameterType="com.sky.entity.Category">
@@ -48,5 +49,30 @@
             and type = #{type}
         </if>
         order by sort asc,create_time desc
+    </select>
+    <select id="getNameById" resultType="java.lang.String" parameterType="java.lang.Long">
+        select name from category where id = #{id}
+    </select>
+    <select id="count" resultType="java.lang.Long" parameterType="com.sky.dto.CategoryPageQueryDTO">
+        select count(*) from category
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+<!--            <if test="id != null">-->
+<!--                and id = #{id}-->
+<!--            </if>-->
+            <if test="type != null">
+                and type = #{type}
+            </if>
+        </where>
+    </select>
+    <select id="countByCategoryId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        select count(*) from category
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+        </where>
     </select>
 </mapper>

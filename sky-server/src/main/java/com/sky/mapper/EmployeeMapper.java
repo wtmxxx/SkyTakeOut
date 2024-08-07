@@ -7,6 +7,8 @@ import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface EmployeeMapper extends BaseMapper<Employee> {
 
@@ -18,5 +20,5 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
 //    @Select("select * from employee where username = #{username}")
     Employee getByUsername(String username);
 
-    Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+    List<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 }

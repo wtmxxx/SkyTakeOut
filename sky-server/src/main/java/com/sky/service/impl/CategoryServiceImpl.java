@@ -14,6 +14,7 @@ import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
+import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +63,18 @@ public class CategoryServiceImpl implements CategoryService {
      * @return
      */
     public PageResult pageQuery(CategoryPageQueryDTO categoryPageQueryDTO) {
-        PageHelper.startPage(categoryPageQueryDTO.getPage(),categoryPageQueryDTO.getPageSize());
-        //下一条sql进行分页，自动加入limit关键字分页
-        Page<Category> page = categoryMapper.pageQuery(categoryPageQueryDTO);
-        return new PageResult(page.getTotal(), page.getResult());
+        categoryPageQueryDTO.setPage((categoryPageQueryDTO.getPage()-1)*categoryPageQueryDTO.getPageSize());
+
+        List<Category> page = categoryMapper.pageQuery(categoryPageQueryDTO);
+//        LambdaQueryWrapper<SetmealVO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+//        if (categoryPageQueryDTO.getName() != null) lambdaQueryWrapper.like(SetmealVO::getName, categoryPageQueryDTO.getName());
+//        if (categoryPageQueryDTO.getStatus() != null) lambdaQueryWrapper.like(SetmealVO::getStatus, categoryPageQueryDTO.getStatus());
+//        if (categoryPageQueryDTO.getCategoryId() != null) lambdaQueryWrapper.like(SetmealVO::getCategoryId, categoryPageQueryDTO.getCategoryId());
+
+        return PageResult.builder()
+                .total(categoryMapper.count(categoryPageQueryDTO))
+                .records(page)
+                .build();
     }
 
     /**
@@ -81,7 +90,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         //查询当前分类是否关联了套餐，如果关联了就抛出业务异常
-        count = setmealMapper.countByCategoryId(id);
+        count = categoryMapper.countByCategoryId(id);
         if(count > 0){
             //当前分类下有菜品，不能删除
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);

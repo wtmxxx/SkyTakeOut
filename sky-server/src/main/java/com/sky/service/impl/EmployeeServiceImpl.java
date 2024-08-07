@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -87,11 +88,13 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
-        PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
-        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        employeePageQueryDTO.setPage((employeePageQueryDTO.getPage()-1)*employeePageQueryDTO.getPageSize());
+        List<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (employeePageQueryDTO.getName() != null) lambdaQueryWrapper.like(Employee::getName, employeePageQueryDTO.getName());
         return PageResult.builder()
-                .total(page.getTotal())
-                .records(page.getResult())
+                .total(this.count(lambdaQueryWrapper))
+                .records(page)
                 .build();
     }
 
