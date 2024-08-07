@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.DishMapper">
+    <select id="pageQuery" resultType="com.sky.vo.DishVO"
+            parameterType="com.sky.dto.DishPageQueryDTO">
+        select dish.*, category.name as categoryName from dish left outer join category on dish.category_id = category.id
+        <where>
+            <if test="name != null and name != ''">
+                and dish.name like concat('%', #{name}, '%')
+            </if>
+            <if test="categoryId != null">
+                and dish.category_id like concat('%', #{categoryId}, '%')
+            </if>
+            <if test="status != null">
+                and dish.status like concat('%', #{status}, '%')
+            </if>
+        </where>
+        order by create_time desc
+        limit #{page}, #{pageSize}
+    </select>
+    <select id="listByCategoryId" resultType="com.sky.entity.Dish" parameterType="com.sky.entity.Dish">
+        select * from dish
+        where category_id = #{categoryId}
+    </select>
+</mapper>
