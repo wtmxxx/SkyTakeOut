@@ -1,0 +1,1 @@
+## A TakeOut platform built using SpringBoot, MyBatis, MySQL, etc.

@@ -1,0 +1,128 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource:
+    driver-class-name: ${sky.datasource.driver-class-name}
+    url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${sky.datasource.username}
+    password: ${sky.datasource.password}
+  data:
+    redis:
+      host: ${sky.redis.host}
+      port: ${sky.redis.port}
+      password: ${sky.redis.password}
+      database: ${sky.redis.database}
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+  #mapper配置文件
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.sky.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      display-name: '默认API'
+      paths-to-match: '/**'
+      packages-to-scan: com.sky.controller
+    - group: 'admin'
+      display-name: '员工API'
+      paths-to-match: '/**'
+      packages-to-scan: com.sky.controller.admin
+    - group: 'user'
+      display-name: '用户API'
+      paths-to-match: '/**'
+      packages-to-scan: com.sky.controller.user
+  default-flat-param-object: true
+#  packagesToScan: com.sky
+#  pathsToMatch: /v1, /api/balance/**
+
+# TODO documents自定义文档还未解决
+# 不是我的问题, 呵呵呵
+knife4j:
+  enable: true
+#  documents:
+#    -
+#      group: 1.2.x
+#      name: 苍穹外卖API文档
+#      locations: classpath:markdown/home.md
+#    -
+#      group: 1.3.x
+#      name: 员工管理API文档
+#      locations: classpath:markdown/admin.md
+  setting:
+    language: zh-CN
+#    enable-swagger-models: true
+#    enable-document-manage: true
+#    swagger-model-name: 实体类列表
+#    enable-version: false
+#    enable-reload-cache-parameter: false
+#    enable-after-script: true
+#    enable-filter-multipart-api-method-type: POST
+#    enable-filter-multipart-apis: false
+#    enable-request-cache: true
+#    enable-host: false
+#    enable-host-text: 192.168.0.193:8000
+    enable-home-custom: false
+    home-custom-path: classpath:markdown/home.md
+    enable-search: true
+    enable-footer: true
+    enable-footer-custom: true
+    footer-custom-content: Apache License 2.0 | Copyright  2024-[沃特陌](https://www.wotemo.com)
+#    enable-dynamic-parameter: false
+#    enable-debug: true
+#    enable-open-api: true
+#    enable-group: true
+#  cors: false
+#  production: false
+  basic:
+    enable: false
+    username: admin
+    password: 1005
+
+logging:
+  level:
+    com:
+      sky:
+        mapper: debug
+        service: info
+        controller: info
+
+
+sky:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: wotemo
+    # 设置jwt过期时间
+    admin-ttl: 720000000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+
+    user-secret-key: wotemo
+    user-ttl: 72000000
+    user-token-name: authentication
+
+  leancloud:
+    app-id: ${sky.leancloud.app-id}
+    app-key: ${sky.leancloud.app-key}
+    server-url: ${sky.leancloud.server-url}
+
+  wechat:
+    appid: ${sky.wechat.appid}
+    secret: ${sky.wechat.secret}
