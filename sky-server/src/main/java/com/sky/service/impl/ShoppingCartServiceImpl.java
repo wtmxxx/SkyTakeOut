@@ -1,6 +1,7 @@
 package com.sky.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
@@ -40,16 +41,23 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
 
         LambdaQueryWrapper<ShoppingCart> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper
-                .eq(ShoppingCart::getUserId, shoppingCart.getUserId())
-                .eq(ShoppingCart::getDishId, shoppingCart.getDishId())
-                .eq(ShoppingCart::getSetmealId, shoppingCart.getSetmealId())
-                .eq(ShoppingCart::getDishFlavor, shoppingCart.getDishFlavor());
+                .eq(shoppingCart.getUserId() != null, ShoppingCart::getUserId, shoppingCart.getUserId())
+                .eq(shoppingCart.getDishId() != null, ShoppingCart::getDishId, shoppingCart.getDishId())
+                .eq(shoppingCart.getSetmealId() != null, ShoppingCart::getSetmealId, shoppingCart.getSetmealId())
+                .eq(shoppingCart.getDishFlavor() != null, ShoppingCart::getDishFlavor, shoppingCart.getDishFlavor());
 
         ShoppingCart cartTemp = shoppingCartMapper.selectOne(lambdaQueryWrapper);
 
+        System.out.println(shoppingCart.getUserId() + " " + shoppingCart.getDishId() + " " + shoppingCart.getSetmealId() + " " + shoppingCart.getDishFlavor());
+
         if (cartTemp != null) {
-            cartTemp.setNumber(cartTemp.getNumber() + 1);
-            shoppingCartMapper.updateById(cartTemp);
+//            cartTemp.setNumber(cartTemp.getNumber() + 1);
+            LambdaUpdateWrapper<ShoppingCart> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper
+                    .set(ShoppingCart::getNumber, cartTemp.getNumber() + 1)
+                    .eq(ShoppingCart::getId, cartTemp.getId());
+            shoppingCartMapper.update(lambdaUpdateWrapper);
+//            shoppingCartMapper.updateById(cartTemp);
         } else {
             Long dishId = shoppingCartDTO.getDishId();
             if (dishId != null) {
