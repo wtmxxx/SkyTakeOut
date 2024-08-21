@@ -18,6 +18,7 @@ import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.websocket.WebSocketServer;
 import com.tapsdk.lc.json.JSON;
 import org.apache.poi.ss.formula.ptg.MemAreaPtg;
 import org.springframework.beans.BeanUtils;
@@ -40,15 +41,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     private final OrderDetailMapper orderDetailMapper;
     private final UserMapper userMapper;
     private final WeChatPayUtil weChatPayUtil;
+    private final WebSocketServer webSocketServer;
 
     @Autowired
-    public OrderServiceImpl(AddressBookMapper addressBookMapper, ShoppingCartMapper shoppingCartMapper, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, UserMapper userMapper, WeChatPayUtil weChatPayUtil) {
+    public OrderServiceImpl(AddressBookMapper addressBookMapper, ShoppingCartMapper shoppingCartMapper, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, UserMapper userMapper, WeChatPayUtil weChatPayUtil, WebSocketServer webSocketServer) {
         this.addressBookMapper = addressBookMapper;
         this.shoppingCartMapper = shoppingCartMapper;
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
         this.userMapper = userMapper;
         this.weChatPayUtil = weChatPayUtil;
+        this.webSocketServer = webSocketServer;
     }
 
     @Override
@@ -164,11 +167,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
             orderMapper.updateById(order);
         }
 
-        //TODO 接单提醒
-//        Map map = new HashMap();
-//        map.put("type", 1);
-//        map.put("orderId", order.getId());
-//        map.put("content", "订单号: " + outTradeNo);
-//        webSocketServer.sendToAllClient(JSON.toJSONString(map));
+        Map map = new HashMap();
+        map.put("type", 1);
+        map.put("orderId", order.getId());
+        map.put("content", "订单号: " + outTradeNo);
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 }
