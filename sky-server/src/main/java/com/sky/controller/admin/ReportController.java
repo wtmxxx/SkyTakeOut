@@ -2,6 +2,8 @@ package com.sky.controller.admin;
 
 import com.sky.result.Result;
 import com.sky.service.ReportService;
+import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 @Slf4j
 public class ReportController {
     private final ReportService reportService;
+
     @Autowired
     public ReportController(ReportService reportService) {
         this.reportService = reportService;
@@ -43,7 +46,28 @@ public class ReportController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end
     ) {
-        log.info("用户统计: {}, {}", begin, end);
+        log.info("用户数据统计: {}, {}", begin, end);
         return Result.success(reportService.getUserStatistics(begin, end));
     }
+
+    @GetMapping("/ordersStatistics")
+    @Operation(summary = "订单统计")
+    public Result<OrderReportVO> ordersStatistics(
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end
+    ) {
+        log.info("订单数据统计: {}, {}", begin, end);
+        return Result.success(reportService.getOrdersStatistics(begin, end));
+    }
+
+    @GetMapping("/top10")
+    @Operation(summary = "销量排名top10")
+    public Result<SalesTop10ReportVO> top10(
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end
+    ) {
+        log.info("销量排名top10: {}, {}", begin, end);
+        return Result.success(reportService.getSalesTop10(begin, end));
+    }
+
 }
