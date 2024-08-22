@@ -70,7 +70,7 @@
         limit #{page}, #{pageSize}
     </select>
 
-    <select id="countPage" resultType="Long"
+    <select id="countPage" resultType="java.lang.Long"
             parameterType="com.sky.dto.OrdersPageQueryDTO">
         select count(*) from orders
         <where>
@@ -122,6 +122,20 @@
         group by od.name
         order by number desc
         limit 0, 10
+    </select>
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from orders
+        <where>
+            <if test="begin != null">
+                and order_time &gt; #{begin}
+            </if>
+            <if test="end != null">
+                and order_time &lt; #{end}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
     </select>
 
 </mapper>
